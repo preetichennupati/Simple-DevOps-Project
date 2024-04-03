@@ -1,0 +1,289 @@
+### v1.34
+- Added support for .NET 8 applications.
+
+### v1.33
+- Bug Fixes
+    - Fixed an issue where the generate app-deployment command could fail if the container image was untagged.
+    - Fixed an issue where the inventory command could encounter a runtime exception.
+
+### v1.32
+- Adopted a new telemetry endpoint to collect metrics, logs, and command-generated artifacts.
+- Updated the SectionForMetricsService and SectionForUploadSupportBundleService statements in the example IAM policies for Amazon EKS, Amazon ECS, and App Runner to support the new telemetry endpoint. For more information, see Example IAM policies.
+- Bug Fixes
+    - Fixed an issue where generating a pipeline in AWS CodePipeline for Windows applications could fail.
+    - Fixed an issue where containerization doesn’t wait long enough for health checks to pass.
+    - Improved error handling for missing IAM permissions during deployment.
+    - Fixed a bug with handling quotation marks in the paths for Windows services.
+
+### v1.31
+- Now using ECS Optimized AMIs for Windows build instances in the AWS CodePipeline integration
+- Bug Fixes
+    - Fixed an issue with generated pipelines in AWS CodePipeline where builds could fail
+    - Fixed an issue where deployments to Amazon EKS would fail in some newer AWS regions
+    - Fixed an issue where Application Load Balancers would not be created when deploying to Amazon EKS
+
+### v1.30
+- Added support to deploy Microsoft Azure DevOps pipelines from servers with operating system other than Ubuntu.
+- Changed the default cluster instance type to c5.4xlarge when deploying to Amazon ECS with the default environment (EC2 instances).
+- Changed the instance type to t3.medium for Windows container pipelines created in AWS CodePipeline.
+- Changed the default CodeBuild environment type to Amazon Linux 2023 for all container pipelines created in AWS CodePipeline.
+- Bug Fixes
+    - Fixed a bug where the remote analyze command was unable to access files on the application server if they required a second hop to a network drive.
+    - Fixed a bug where remote workflows weren't successfully completing with Microsoft Azure DevOps pipelines, even with Windows Server 2019 worker machines.
+    - Fixed a bug where deployments to Amazon EKS could indicate they were successful when the application container didn't function properly.
+    - Improved error handling for the containerize command when the host platform and image platform don't match.
+    - Improved error handling for when the operating system or architecture of the container image doesn't match that of the server running the Docker engine.
+
+### v1.29
+- Changed the default deployed version of Amazon Elastic Kubernetes Service (Amazon EKS) clusters to 1.26
+- Bug Fixes
+    - Fixed a bug where the containerize command failed to handle Linux applications with the \n, \r, \t, \b, \f, or \v characters defined in environment variables.
+    - Fixed a bug where deploying to Amazon EKS was failing when the existing stack could not be updated.
+    - Fixed a bug where some App2Container commands would not complete for machines without internet connectivity.
+
+### v1.28
+- Changed the S3 object key prefix for uploading CloudFormation templates for both the `generate app-deployment` and `generate pipeline` commands
+- Now defaulting to IMDSv2 for Windows build instances when integrating with AWS CodePipeline
+- Added support for Amazon Linux 2023
+- Changed the default installation from Java Development Kit (JDK) 11 to Amazon Corretto 11 when App2Container generates a Dockerfile
+- Bug Fixes
+    - Removed the unnecessary creation of an Amazon EC2 key pair when deploying to Amazon Elastic Container Service (Amazon ECS) on AWS Fargate (Fargate)
+    - Improved error handling of CloudFormation stack creation and update failures
+    - Fixed a bug where the analysis phase was failing while trying to discover database connection files over networked drives
+    - Fixed a bug where all ports of Windows services would not be detected
+    - Fixed a bug handling quotation marks in paths for Windows services
+    - Fixed a bug where an incorrect health check was being used for Windows services
+    - Fixed a bug with handling arguments for the executable used for Windows services
+    - Fixed a bug where the generated name of S3 buckets for CodePipeline integration could be too long
+    - Fixed a bug where Azure DevOps pipelines for Linux applications would use an unsupported agent image
+    - Fixed a bug where a named profile would be required for the `containerize` command, even when you don't use an input archive from Amazon S3
+    - Fixed a bug with using the `generate app-deployment` command while specifying the `--deploy` flag where the provided S3 bucket could fail validation
+
+### v1.27
+Announcement
+App2Container version 1.27 has been rolled back due to an issue with analyzing applications on Linux. We recommend that you run the app2container upgrade command to install the latest generally available version. For more information, see app2container upgrade command.
+
+### v1.26
+- Now defaulting to IMDSv2 for cluster instances when creating Amazon ECS and Amazon EKS clusters
+- Now generating machine-based application IDs to ensure uniqueness
+- Bug Fixes
+    - Fix an issue for containerization when the application runs as a non-root user
+
+### v1.25
+- Change default .Net Framework base image to version 4.8
+- Bug Fixes
+    - Clarified error messaging when the containerize command fails while using the --build-only flag
+    - Clarified some error messaging related to analyze command failures on Windows
+    - Fixed an issue causing a duplicate s3 pipeline bucket name across different accounts with same app id
+
+### v1.24
+- Support .Net 7 application
+- Bug Fixes
+    - Fixed a bug when containerizing an application running as a different user on Linux
+
+### v1.23
+- Enhanced EKS Deployment features to make it easier to work with existing clusters
+    - Supporting setting CPU and Memory limits
+    - Support for choosing an ingress configuration using an AWS Application Loadbalancer (ALB) or NGINX with AWS Network Loadbalancer (NLB).
+    - Support for setting up DNS records for the deployed application
+    - Support for HTTPS for deployments via an AWS Certificate Manager (ACM) Certificate.
+- Bug Fixes
+    - Changed default git branch name used by generated pipelines for inclusive language
+    - Fixed a bug where analysis.json was unable to de-duplicate ports
+    - Fixed a bug that upload-support-bundle failed due to large log file
+    - Fixed a bug with Firelens logging for Linux ECS deployments
+
+### v1.22
+- Bug Fixes
+    - Fixed an issue causing analysis to fail for IIS applications that use a shared network drive as the site physical path
+    - Fixed an issue where IIS web apps would become part of the default app pool in the generated container image
+    - Remote app servers no longer require AWSPowershell module for analyze and extract
+    - Fixed an issue when validating an existing VPC for Amazon EKS deployments
+    - Fixed an issue where App2Container would fail to update a deployment when the Cloudformation stack is not in a complete state
+
+### v1.21
+- Updated default version for new Amazon EKS deployments to Amazon EKS version 1.22
+- Bug Fixes
+    - Fixed an issue causing new Windows EKS deployments to be stuck in state ContainerCreating
+    - Fixed an issue when creating new Amazon EKS deployments to an existing VPC
+
+### v1.20
+- Bug Fixes
+   - Address an issue on linux when analyzing tomcat applications with a non-default webapps directory
+
+### v1.19
+- Bug Fixes
+    - Fixed a bug on windows where invalid local input archive path returned internal error
+    - Fixed a bug on linux and windows where remote configure was not working with --input-json file
+    - Pipeline stage would now show user error if Dockerfile.update is missing from workspace
+
+### v1.18
+- Enhanced Azure DevOps support for EKS deployments to work without a kubectl-specific IAM user
+- Bug Fixes
+    - Fixed an issue when retrieving secret from AWS SecretsManager
+    - Fixed an issue when containerizing an application that has a cooperating application
+    - Fixed an issue for Windows when the file path is longer than 260 characters
+    - Fixed an issue when an S3 URL is provided as an input to inputArchive during containerize
+    - Fixed an issue when containerizing java 17 applications on Amazon Linux 2
+
+### v1.17
+- Support Azure Devops as a pipeline deployment target
+- Bug Fixes
+    - App2Container will throw a user error when installed on Powershell version lower than 5.0
+    - Fixed an issue with kubernetes authentication with the latest version of the AWS CLI
+
+### v1.16
+- Bug Fixes
+    - Addressed an issue when analyzing ports used by Windows Service
+    - Addressed an issue with analysis hanging for some linux applications during port connectivity test
+    - Addressed an issue with Windows CodePipeline pipelines failing with large windows apps
+
+### v1.15
+- Optimized App2Container installer size
+- Deprecated the MD5 checksum validation of App2Container installer
+- Made AWS profile setup optional during init
+- Bug Fixes
+    - Added validation for S3 Bucket name during init
+
+### v1.14
+- Bug Fixes
+    - Fixed an issue that caused containerize with --build-only flag to fail when showing CLI output
+    - Handle procfs exe symlink referenced path deletions, causing analyze failures
+    - Run upload support bundle on panic error
+    - Fixed nil pointer issue in generate app-deployment command
+    - Reworded error message for cloudformation access denied
+    - Fixed nil pointer issue in remote configure command
+
+### v1.13
+- Bug Fixes
+    - Fixed an issue that caused containerize with --build-only flag to fail
+    - Fixed an issue that caused JDK version check to fail
+    - Fixed an issue for Windows when an environment variable is used in application path
+    - Fixed an issue that caused the wrong container image tag been used for certain operating systems
+    - Fixed an issue that caused success metrics to be sent when remote command failed
+
+### v1.12
+- Bug Fixes
+    - Fixed an issue that caused remote execution commands to fail on Windows
+
+### v1.11
+- Bug Fixes
+    - Use CentOS Stream as the base image for applications containerized on CentOS
+    - Added an explicit check for the tar command on Linux
+    - Fixed an issue related to checking application images in ECR
+    - Fixed an issue related to early container removal for pre-validation
+
+### v1.10
+- Removed dependencies on Amazon ECR and Docker plugins for Jenkins pipelines
+- Bug Fixes
+    - Added validation for Powershell Version less than 5.0
+    - fixed issue where analyze is unable to handle paths with %SystemDrive%
+
+### v1.9
+- End-to-end workflow support for .NET Core 3.1 and .NET 5/6 Application including single file app
+- Bug Fixes
+    - Fixed an issue related to the 'publicApp' field in deployment.json
+    - Added user validation for existing Jenkins pipelines
+    - Fixed an issue with incremental deployments on failed CF stacks
+    - Fixed an occasional failure of EKS Deployments on Windows
+
+### v1.8
+- Support Jenkins as a pipeline deploy target
+- Support incremental deployments of service and infrastructure changes in ECS, EKS, and App Runner auto-deployments
+- Support pre-validation in containerize and a flag `--no-validate` to disable it
+- Bug Fixes
+    - Fixed an issue that caused download timeout in app2container upgrade
+    - Fixed a deployment issue caused by the wrong Windows 2016 AMI used for ECS services
+    - Fixed an issue with selecting the container image for ECS Service when FireLens logging is enabled
+    - Fixed analysis.json missing application ports bound to loopback
+
+### v1.7
+- Upgrade AWS Lambda Node.js runtime to 14.x in CloudFormation templates
+
+### v1.6
+- Support Fargate as launch type for Windows applications deployed to ECS
+- Use JRE instead of JDK to optimize the Docker image size on Linux
+- Filter out Java processes that are running in a container from the inventory command on Linux
+- Use EKS version 1.19 as the default for new EKS deployments
+- Bug Fixes
+    - Correctly tag EC2 instances created by SSM documents
+    - Fixed an issue related to lowercase Windows drive names during containerization
+    - Fixed an issue related to docker image tags during deployment
+    - Fixed analysis.json bug showing repeated ports
+
+### v1.5
+- Support Windows complex apps
+- Report the endpoint of the loadbalancer for EKS deployments
+- Support for EKS Tagging
+- Support for Pipeline Tagging
+- Bug Fixes
+    - DockerInvalidImageError categorized as user-error
+    - Fixed App Runner Deployment error that occurrs when local App Runner container is still running at deployment time
+    - Fix containerization error when analysis.json has escaped characters
+
+### v1.4
+- Support for deployments to AWS App Runner
+- Bug Fixes
+  - Fixed containerization of Windows apps making use of a secondary drive mount
+  - Added clarification to some errors which are actionable by users
+  - Fixed an issue causing incorrect analysis of RHEL java processes
+  - Fixed an issue resulting in larger than necessary image sizes when sym links are detected in app server
+  - Fixed an issue with reusing a VPC for EKS deployments
+
+### v1.3
+- Support for EC2 instance profiles in place of manually configured AWS profiles.
+- Support EC2 Nitro instance types in A2C deployments for Windows apps.
+- Support for Windows Server Version 2004 base images for containerized Windows apps.
+- Windows containerization will choose base docker images based on where App2Container is run.
+- Windows ECS deployment will choose AMI based on the base docker image.
+- Bug Fixes
+    - Fix issues related to the clarity of error messages.
+    - Fix issue related to symbolic links during containerization.
+    - Fix issue related to spaces in paths in Dockerfiles.
+    - Fix issues related to the Windows remote setup script.
+
+### v1.2
+- Support for remote execution of app2container.
+- Support for HTTPS endpoints in ECS deployments.
+- Support for custom tags as part of App2Container deployment.
+- Bug Fixes
+    - Fixed an amazonlinux containerization issue that occurred when falling back to amazonlinux base image
+    - Prevent AWS configurations from being included in container images for Linux apps
+
+### v1.1
+- Support for Active Directory authenticated Windows app deployments to EKS using gMSA
+- Added command line parameter for custom AWS profiles
+- New CLI to support manual upload of diagnostics and automated upload on errors
+- Bug Fixes
+   - Updated Cloudformation templates for EKS deployments to address previous issues
+   - Fixed internal/user error classification
+   - Fixed upgrade errors to point to the correct log file
+   - Added an explicit check to validate use of Docker version 17.07 or above
+
+### v1.0.2
+- Added Firelens logging support
+- Added container image validation to pipeline generation
+- Bug Fixes
+  - Removed execution role in template if Windows is specified
+  - Fixed template to reflect CloudFormation API change
+  - Fixed autocomplete installation bug
+  - Fixed dark font for Windows errors
+  - Improved error messaging for command execution errors
+  - Fixed containerize error where included file is not valid
+
+### v1.0.1
+- Improved memory usage while archiving on windows
+- Support for containerizing individual applications running in Tomcat and JBoss standalone frameworks
+- Add schema version check and unhealthy version check
+- Bug Fixes
+  - Handle non C drive Windows app
+  - Fix COPY command failure in DockerFile
+  - Access denied error now throwing only user error
+  - Invalid characters removed automatically from AppId
+  - Optimize Windows container image size for Websites with multiple Apps.
+  - Fix error handling for input arguments validation
+  - Fix DockerFile generation failure when enabling dynamic logging
+  - EKS Cloudformation Templates are compatible with new Cloudformation custom resource API
+
+### v1.0.0
+- Initial GA Release
